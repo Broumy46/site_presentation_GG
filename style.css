@@ -169,21 +169,33 @@ div.section_grise1 p {
 }
 
 /* Layout columns */
+/* Faire flotter l'image à gauche et forcer l'alignement haut */
 img.col-contenu {
+  float: left;
   width: 40%;
+  margin-right: 16px;
+  display: block;
+  height: auto;
 }
-div.col-contenu {
-  width: 60%;
-  padding-left: 16px;
-}
-.float_right { float: right; }
 
-/* vertical line text */
+/* La colonne texte ne doit pas être centrée : la garder en flow normal */
+div.col-contenu {
+  width: calc(60% - 16px);
+  display: block; /* ne pas float */
+  overflow: hidden; /* pour se placer correctement à côté d'une image flottée */
+}
+
+/* Clearfix sur .section pour éviter que .section n'ait une hauteur 0 */
+.section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Supprimer la hauteur fixe qui tronque/ décale */
 div.text_avec_ligne_verticale {
-  border-left: 4px solid var(--color1);
-  padding-left: 8px;
-  height: 50px;
-  display: inline-block;
+  height: auto;
+  display: block;
 }
 div.text_avec_ligne_verticale:hover {
   border-left: 4px solid darkblue;
@@ -419,3 +431,4 @@ div.portfolio_image img:hover {
     display: block;
   }
 }
+
