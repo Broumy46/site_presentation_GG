@@ -138,11 +138,22 @@ div.portfolio_header .text_avec_ligne_verticale {
 
 /* bouton : plus besoin d'absolute, on peut utiliser la classe existante */
 a.bouton {
-  /* conserve tes styles précédents ; ajuste si besoin */
-  position: static; /* s'assure qu'il n'est pas absolu */
-  margin: 0; 
-  /* si tu veux un peu de vertical centering interne */
-  padding: 10px 20px;
+  display: inline-block;
+  white-space: nowrap;       /* empêche le saut à la ligne */
+  padding: 10px 18px;
+  font-size: 15px;
+  line-height: 1;
+  border: 3px solid var(--color1);
+  color: var(--color1);
+  text-decoration: none;
+  background-color: rgba(0,0,0,0.25);
+  box-sizing: border-box;
+  margin: 0;                 /* pas de margin-top fixe */
+  vertical-align: middle;
+}
+a.bouton:hover {
+  border-color: lightskyblue;
+  color: lightskyblue;
 }
 
 /* Fix rapide : empêcher le texte de bouton de sauter sur 2 lignes */
@@ -218,7 +229,6 @@ div.section_grise1 p {
   line-height: 1.5;
 }
 
-/* Layout columns */
 /* Faire flotter l'image à gauche et forcer l'alignement haut */
 img.col-contenu {
   float: left;
@@ -301,15 +311,29 @@ img.stc {
   padding-bottom: 100px;
 }
 
-/* Frame */
+/* Frame — taille / marge raisonnable (desktop) */
 div.frame {
   border: 2px solid lightgrey;
   margin: 30px 50px;
-  margin-bottom: 200px;
+  margin-bottom: 30px;        /* <-- réduit fortement (avant 200px) */
   text-align: center;
   padding: 20px 30px;
-  box-shadow: 0px 0px 8px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.2);
   background-color: white;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Limiter la hauteur des images à l'intérieur des frames pour éviter qu'elles prennent tout l'écran */
+div.frame img,
+.portfolio_image img {
+  max-width: 100%;
+  width: auto;
+  max-height: 40vh; /* limite la hauteur à 40% de la fenêtre, ajuste si nécessaire */
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
 }
 
 p.frame_title {
@@ -318,6 +342,7 @@ p.frame_title {
   margin-bottom: 20px;
   text-align: center;
 }
+
 div.frame p:not(.frame_title) {
   text-align: center;
   margin-left: auto;
@@ -326,16 +351,24 @@ div.frame p:not(.frame_title) {
   max-width: 80%;        /* limite la largeur pour une belle mise en page */
   line-height: 1.5;
 }
+
+
 img.profilframe {
   width: 120px;
 }
 
-/* Portfolio header */
+/* Portfolio header — version consolidée (desktop + mobile baseline) */
 div.portfolio_header {
   height: 90px;
   background: url("header.jpg") no-repeat center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-sizing: border-box;
   position: relative;
 }
+
 p.portfolio_header_title {
   font-size: 26px;
   font-weight: bold;
@@ -403,7 +436,7 @@ div.portfolio_image img:hover {
     margin-top: 75px;
   }
 
- html, body {
+  html, body {
     max-width: 100%;
     overflow-x: hidden;
   }
@@ -418,8 +451,15 @@ div.portfolio_image img:hover {
   body { font-size: 15px; line-height: 1.45; }
 
   /* titres légèrement plus petits */
-  h1 { font-size: 34px; }
-  h2 { font-size: 24px; }
+  div.cover h1 {
+  font-size: 30px !important;      /* taille desktop réduite */
+  line-height: 1.05;
+  margin-top: 6px;                 /* ajuste l'espacement si besoin */
+  margin-bottom: 15px;
+  font-weight: 700;                /* conserve l'effet "gras" si tu utilises <b> */
+  text-transform: none;            /* optionnel */
+}
+  h2 { font-size: 22px; }
 
   /* images et vignettes */
   div.portfolio_image img,
@@ -454,7 +494,21 @@ div.portfolio_image img:hover {
     -ms-hyphens: auto;
     hyphens: auto;
   }
-  
+
+  /* texte descriptif centré mieux (si tu veux) */
+  div.frame p:not(.frame_title) {
+    text-align: center;
+    max-width: 95%;
+    margin: 0 auto 10px auto;
+  }
+
+  /* bouton plus petit pour ne pas casser la ligne */
+  a.bouton {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+
+
   h1 {
     font-size: 38px;
     margin-top: 6px;
@@ -542,6 +596,101 @@ div.portfolio_image img:hover {
   .display_mobile {
     display: block;
   }
+
+  /* FRAME : visible et adaptative (safe) */
+  div.frame {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 16px 12px 24px 12px !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 5 !important; /* modéré */
+    background-clip: padding-box !important;
+  }
+
+  /* Limiter la taille des images à l'intérieur de la frame/portfolio */
+  div.frame img,
+  .portfolio_image img {
+    width: auto !important;              /* ne force pas 100% qui étire parfois */
+    max-width: 100% !important;          /* s'adapte à la largeur du conteneur */
+    height: auto !important;
+    max-height: 35vh !important;         /* empêche images trop hautes */
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 auto !important;
+    padding-bottom: 8px !important;
+    position: relative !important;
+    z-index: 1 !important;               /* images sous le texte */
+  }
+
+  /* Portfolio image container safety */
+  div.portfolio_image {
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  /* HEADER mobile : contenu lisible, bouton visible */
+  div.portfolio_header {
+    height: auto !important;
+    min-height: 56px !important;
+    padding: 8px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: relative !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+    background-size: cover !important;
+    box-sizing: border-box !important;
+  }
+  div.portfolio_header .text_avec_ligne_verticale,
+  div.portfolio_header .text_avec_ligne_verticale p,
+  p.portfolio_header_title {
+    color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+    position: relative !important;
+    z-index: 12 !important;
+    margin: 0 !important;
+  }
+
+  /* Bouton : pas d'absolu, réduit pour mobile */
+  .portfolio_header a.bouton,
+  a.bouton {
+    position: static !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    transform: none !important;
+    z-index: 20 !important;
+  }
+
+  /* Texte de la frame : au-dessus des images, lisible */
+  div.frame p, div.frame p:not(.frame_title) {
+    color: #222 !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
+    margin: 0 0 12px 0 !important;
+    position: relative !important;
+    z-index: 25 !important;
+    background: transparent !important;
+    word-break: break-word !important;
+  }
+
+  /* réduire les paddings verticaux */
+  .section, .section_grise1, .section_grise2 {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  /* éviter scroll horizontal */
+  html, body { overflow-x: hidden !important; max-width: 100% !important; }
 }
 
 
