@@ -16,6 +16,25 @@ img {
   object-fit: contain;
 }
 
+/* ===== Fix : centrer correctement les images du portfolio ===== */
+div.portfolio_image,
+div.portfolio_image p {
+  text-align: center; /* assure le centrage du contenu */
+}
+
+/* Image centrée (inline-block pour que text-align fonctionne),
+   mais garde max-width / responsive et preserve ratio */
+div.portfolio_image img,
+div.portfolio_image a img {
+  display: inline-block !important; /* inline-block pour être centré par text-align */
+  margin: 0 auto;
+  width: 70%;        /* ou adapte la valeur (ex: 60% ou 100%) */
+  max-width: 475px;  /* garde la contrainte existante */
+  height: auto !important;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
 /* Autoriser le shrink dans les conteneurs flex */
 .row, .col, .frame, .section, table, .portfolio_image {
   min-width: 0;
@@ -96,17 +115,48 @@ div.cover_contact a {
   font-size: 14px;
 }
 
-/* Buttons */
-a.bouton {
-  font-size: 16px;
-  border: 3px solid var(--color1);
-  padding: 10px 20px;
-  color: var(--color1);
-  text-decoration: none;
-  background-color: #00000040;
-  display: inline-block;
-  margin-top: 18px;
+/* portfolio header - flex layout, centré verticalement, espacement entre titre et bouton */
+div.portfolio_header {
+  height: 90px;
+  display: flex;
+  align-items: center;            /* centre verticalement le contenu */
+  justify-content: space-between; /* espace entre texte à gauche et bouton à droite */
+  padding: 0 25px;                /* remplace left/right absolus */
+  background: url("header.jpg") no-repeat center/cover;
+  position: relative;             /* garde au cas où, mais pas nécessaire pour flex */
+  box-sizing: border-box;
 }
+
+/* si tu veux que le texte garde exactement la même apparence */
+div.portfolio_header .text_avec_ligne_verticale {
+  margin-left: 16px; /* ou 0 si padding gère déjà l'espacement */
+  margin-top: 0;     /* supprimé pour garder le centrage vertical */
+  height: auto;      /* laisse le texte s'ajuster naturellement */
+  display: flex;
+  align-items: center; /* centre le texte à l'intérieur de la boîte verticale */
+}
+
+/* bouton : plus besoin d'absolute, on peut utiliser la classe existante */
+a.bouton {
+  /* conserve tes styles précédents ; ajuste si besoin */
+  position: static; /* s'assure qu'il n'est pas absolu */
+  margin: 0; 
+  /* si tu veux un peu de vertical centering interne */
+  padding: 10px 20px;
+}
+
+/* Fix rapide : empêcher le texte de bouton de sauter sur 2 lignes */
+.portfolio_header a.bouton,
+a.bouton {
+  white-space: nowrap;        /* empêche le retour à la ligne */
+  display: inline-block;      /* permet margin/padding cohérents */
+  padding: 8px 14px;          /* réduire légèrement le padding si nécessaire */
+  font-size: 14px;            /* ajuste la taille pour tenir sur une ligne */
+  line-height: 1;             /* évite doublons de hauteur */
+  box-sizing: border-box;
+  max-width: none;            /* s'assure qu'on ne limite pas la largeur */
+}
+
 a.bouton:hover {
   border: 3px solid lightskyblue;
   color: lightskyblue;
@@ -261,14 +311,23 @@ div.frame {
   box-shadow: 0px 0px 8px 8px rgba(0, 0, 0, 0.2);
   background-color: white;
 }
+
 p.frame_title {
   font-size: 30px;
   margin-top: 5px;
   margin-bottom: 20px;
   text-align: center;
 }
+div.frame p:not(.frame_title) {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;        /* s'assure que text-align fonctionne */
+  max-width: 80%;        /* limite la largeur pour une belle mise en page */
+  line-height: 1.5;
+}
 img.profilframe {
-  width: 100px;
+  width: 120px;
 }
 
 /* Portfolio header */
@@ -343,6 +402,59 @@ div.portfolio_image img:hover {
     transform: translateX(-50%); /* center with left:50% if used */
     margin-top: 75px;
   }
+
+ html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .section, .frame, .portfolio_image, .col-contenu {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box;
+    min-width: 0 !important;
+  }
+
+  /* réduire un peu la taille générale du texte pour tenir sur mobile */
+  body { font-size: 15px; line-height: 1.45; }
+
+  /* titres légèrement plus petits */
+  h1 { font-size: 34px; }
+  h2 { font-size: 24px; }
+
+  /* images et vignettes */
+  div.portfolio_image img,
+  img.col-contenu,
+  img.appli,
+  img.ef,
+  img.stc {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+    padding-bottom: 10px !important; /* éviter gros paddings */
+  }
+
+  /* retirer paddings verticaux excessifs sur frame */
+  div.frame {
+    margin: 10px 0 20px 0 !important;
+    padding: 12px !important;
+    box-shadow: none;
+  }
+
+  /* limiter padding-bottom trop grand */
+  img.appli { padding-bottom: 0 !important; }
+  img.stc { padding-bottom: 10px !important; }
+
+  /* forcer wrapping des longs mots/URLs */
+  p, li, .text_avec_ligne_verticale, .col-contenu p, .section p {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }
+  
   h1 {
     font-size: 38px;
     margin-top: 6px;
@@ -431,4 +543,5 @@ div.portfolio_image img:hover {
     display: block;
   }
 }
+
 
